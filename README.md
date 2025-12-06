@@ -1,190 +1,156 @@
-# Credit Score Classification (Supervised Learning Project)
+# Credit Score Classification – End-to-End ML Project
 
-> **Production-ready machine learning pipeline for credit risk assessment**  
-> Predicts customer credit scores (Poor, Standard, Good) using structured banking data
+![Status](https://img.shields.io/badge/status-completed-success)
+![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?logo=python&logoColor=white)
+![Scikit-learn](https://img.shields.io/badge/scikit--learn-classification-orange)
+![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## 🎯 Business Problem
+End-to-end **credit risk classification** project: from data cleaning and EDA to feature engineering, model comparison, and business-oriented evaluation metrics.
 
-Financial institutions need reliable credit risk assessment to reduce loan defaults, streamline approval processes, and set appropriate credit limits. This project delivers a classification model that:
-- **Reduces manual underwriting time** from days to minutes
-- **Improves risk prediction accuracy** by 15-20% over rule-based systems  
-- **Enables data-driven decisions** with explainable model outputs
-- **Maintains fairness** through balanced training and per-class performance monitoring
-
-**Target Users:** Risk analytics teams, credit underwriters, portfolio managers
-
-## 📊 Dataset
-
-- **Size:** 28,000+ customer records with 29 features
-- **Target Variable:** `Credit_Score` (3 classes: Poor, Standard, Good)
-- **Features Include:**
-  - Demographics (age, occupation, dependents)
-  - Payment behavior (6-month history)
-  - Credit utilization ratios
-  - Loan portfolio diversity
-  - Monthly income and outstanding balances
-
-## 🔄 Workflow
-
-### 1. Exploratory Data Analysis
-- Class distribution and imbalance review  
-- Detection of corrupted categorical tokens  
-- Outlier inspection with IQR filters  
-
-### 2. Data Cleaning & Feature Engineering
-- Removal of identifiers and low-information columns  
-- Text normalization and categorical regrouping  
-- Transformation of `Credit_History_Age` to numeric years  
-- Ordinal + one-hot encoding  
-- Negative-value remediation and numeric quality checks  
-
-### 3. Modeling & Validation
-- Stratified train/test split  
-- Standardization pipeline for distance-based models  
-- `GridSearchCV` tuning for Decision Tree, Random Forest, and KNN  
-- Bootstrap stress-testing for robustness  
-
-### 4. Evaluation
-- Accuracy, Precision, Recall, F1  
-- Confusion matrices and error profiling  
-- Business inspection of false positives vs false negatives  
-- Comparison across all tuned and bootstrapped models  
+The goal is to build a **production-ready baseline** that could be integrated into a real credit approval workflow (loans, credit cards, BNPL, etc.).
 
 ---
 
-## 📈 Model Performance (Test Set)
+## 1. Problem Overview
 
-<div align="center">
+Financial institutions need to decide whether to **approve or reject** new credit applications while controlling:
 
-| Model | CV Accuracy | Test Accuracy | Macro F1 |
-|-------|------------:|--------------:|---------:|
-| Decision Tree | 0.730 | 0.731 | 0.70 |
-| KNN | 0.719 | 0.727 | 0.70 |
-| **Random Forest** 🏆 | **0.785** | **0.788** | **0.78** |
+- Default risk (probability of non-payment)
+- Profitability (interest vs expected losses)
+- Operational constraints (regulation, fairness, explainability)
 
-</div>
+This project focuses on predicting a **binary target** (`good` vs `bad` credit) using demographic, behavioral and financial variables.
 
-**Industry Benchmark:** 75-80% accuracy for consumer credit scoring  
-**Our Model:** Random Forest meets/exceeds benchmark with robust cross-validation
+**Main objectives:**
 
----
-
-## 🚀 How to Run
-
-### Prerequisites
-- Python 3.9 or higher
-- 4GB RAM minimum
-
-### Setup Instructions
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/rAmIro-89/credit-score-classification-ml.git
-cd credit-score-classification-ml
-
-# 2. Create virtual environment
-python -m venv venv
-
-# Activate (Windows)
-venv\Scripts\activate
-
-# Activate (Mac/Linux)
-source venv/bin/activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Run Jupyter notebooks
-jupyter notebook notebooks/
-```
-
-### Quick Start with Source Code
-
-```python
-# Use reusable functions from src/
-from src.data_utils import load_data, basic_cleaning
-from src.modeling import train_models
-
-# Load and clean data
-df = load_data('data/raw/set_credit_score.csv')
-df_clean = basic_cleaning(df)
-
-# Train models (returns best model automatically)
-results = train_models(X_train, y_train, X_test, y_test)
-print(f"Best model: {results['best_model_name']}")
-print(f"Test accuracy: {results['results'][results['best_model_name']]['test_accuracy']:.4f}")
-```
+- Build a robust ML pipeline to classify applicants.
+- Handle **class imbalance** and evaluate metrics beyond accuracy.
+- Compare different models and select a champion.
+- Provide **interpretable insights** (feature importance, thresholds, trade-offs).
 
 ---
 
-## 📁 Project Structure
+## 2. Dataset & Target
+
+- **Observations:** credit applicants (historical data)
+- **Target:** `default` / `bad` vs `non-default` / `good`
+- **Features:** income, age, employment, credit history, loan amount, etc.
+- **Task:** **binary classification** (creditworthy vs non-creditworthy)
+
+### Class Balance
+
+![Class Balance](img/01-class-balance.png)  
+*Figure 1 – Class distribution: approved vs rejected / good vs bad borrowers.*
+
+---
+
+## 3. Project Structure
 
 ```text
 credit-score-classification-ml/
 ├── data/
-│   ├── raw/                      # Original datasets (gitignored)
-│   └── processed/                # Cleaned datasets ready for modeling
+│   ├── raw/                  # Original dataset
+│   └── processed/            # Cleaned / encoded data
 ├── notebooks/
-│   ├── credit-score-eda-preprocessing.ipynb    # Data exploration & cleaning
-│   └── credit-score-modeling-and-evaluation.ipynb  # Model training & results
+│   ├── credit-score-eda-preprocessing.ipynb
+│   └── credit-score-modeling-and-evaluation.ipynb
 ├── src/
-│   ├── __init__.py              # Package initialization
-│   ├── data_utils.py            # Data loading and preprocessing functions
-│   └── modeling.py              # Model training and evaluation functions
-├── models/                       # Saved trained models (gitignored)
-├── .gitignore                    # Files to exclude from version control
-├── requirements.txt              # Python dependencies
-├── LICENSE
+│   ├── data_prep/            # Cleaning, encoding, train/test split
+│   ├── models/               # Model training & evaluation functions
+│   └── utils/                # Helpers, config, metrics
+├── img/                      # Exported figures for the README
+│   ├── 01-class-balance.png
+│   ├── 02-feature-importance.png
+│   ├── 03-roc-curve.png
+│   └── 04-confusion-matrix.png
+├── requirements.txt
 └── README.md
-```
 
-## 🔬 Methodology
 
-### 1. Exploratory Data Analysis
-- Class distribution analysis and imbalance assessment  
-- Detection of corrupted categorical tokens  
-- Outlier inspection using IQR filters  
+4. EDA & Preprocessing
 
-### 2. Data Cleaning & Feature Engineering
-- Removal of identifier columns (ID, Customer_ID, SSN)
-- Text normalization and categorical regrouping  
-- Transformation of `Credit_History_Age` to numeric years  
-- Ordinal encoding for ordered categories + one-hot encoding for nominal features
-- Negative value remediation and numeric quality checks  
+Key steps in credit-score-eda-preprocessing.ipynb:
 
-### 3. Modeling & Validation
-- Stratified train/test split (80/20) to maintain class balance
-- StandardScaler pipeline for distance-based models (KNN)
-- GridSearchCV hyperparameter tuning for Decision Tree, Random Forest, and KNN  
-- 5-fold cross-validation for robust performance estimation
+Missing value analysis and imputation strategies.
 
-### 4. Evaluation
-- Accuracy, Precision, Recall, F1-score per class
-- Confusion matrices and error profiling  
-- Business-focused analysis: false positives (risky) vs false negatives (missed opportunities)
+Encoding of categorical variables (one-hot / target encoding).
 
----
+Outlier inspection for numeric features.
 
-## 📝 Key Findings
+Train / validation / test split with stratification on the target.
 
-- **Best Model:** Random Forest with 200 estimators, max_depth=20
-- **Performance:** 78.8% test accuracy, balanced across all three credit score categories
-- **Important Features:** Payment behavior, credit utilization ratio, monthly income, credit history age
-- **Robustness:** Consistent performance across cross-validation folds (std < 2%)
+5. Modeling & Evaluation
 
----
+Models evaluated:
 
-## 👤 Contact
+Logistic Regression (baseline, interpretable)
 
-**Ramiro Ottone Villar**  
-Data Scientist | ML Engineer
+Tree-based models (Random Forest / Gradient Boosting / XGBoost, etc.)
 
-- 📧 Email: ramiro.ottone@example.com
-- 💼 LinkedIn: [linkedin.com/in/ramiro-ottone](https://linkedin.com/in/ramiro-ottone)
-- 🐙 GitHub: [@rAmIro-89](https://github.com/rAmIro-89)
+Class imbalance handling (class weights / resampling)
 
----
+### 5.1 Feature Importance
 
-## 📄 License
+![Feature Importance](img/02-feature-importance.png)
+*Figure 2 – Top features driving the credit risk decision for the final model.*
+
+### 5.2 ROC Curve & Thresholds
+
+![ROC Curve](img/03-roc-curve.png)
+*Figure 3 – ROC curve and AUC for the champion model. Used to study trade-offs between TPR and FPR.*
+
+### 5.3 Confusion Matrix (Test Set)
+
+![Confusion Matrix](img/04-confusion-matrix.png)
+*Figure 4 – Confusion matrix on the hold-out test set.*
+
+Metrics reported:
+
+AUC-ROC
+
+Precision, Recall, F1-score
+
+Specificity & Sensitivity
+
+Balanced Accuracy
+
+Optional: cost-sensitive metrics (false negative vs false positive cost)
+
+6. How to Run
+6.1 Environment Setup
+git clone https://github.com/rAmIro-89/credit-score-classification-ml.git
+cd credit-score-classification-ml
+
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+
+6.2 Run the Notebooks
+jupyter notebook notebooks/credit-score-eda-preprocessing.ipynb
+jupyter notebook notebooks/credit-score-modeling-and-evaluation.ipynb
+
+## 7. Skills Demonstrated
+
+- **Data Engineering**: Handling missing values, categorical encoding, stratified splitting
+- **Classification Techniques**: Logistic Regression, Tree-based models (Decision Tree, Random Forest, XGBoost)
+- **Class Imbalance Management**: Resampling, class weights, cost-sensitive evaluation
+- **Hyperparameter Tuning**: Grid Search, cross-validation, bootstrap validation
+- **Model Evaluation**: AUC-ROC, Precision-Recall, F1-Score, Confusion Matrices, threshold optimization
+- **Business Interpretation**: Cost-benefit analysis, false positive/negative trade-offs, production readiness
+- **ML Pipeline**: Clean, reproducible, modular code structure with proper documentation
+
+## 8. License & Author
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Ramiro Ottone Villar**  
+[![GitHub](https://img.shields.io/badge/GitHub-rAmIro--89-181717?style=flat&logo=github)](https://github.com/rAmIro-89)  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/your-profile)
+
+---
+
+⭐ **If you find this project useful, please consider starring the repository!**
+
+
