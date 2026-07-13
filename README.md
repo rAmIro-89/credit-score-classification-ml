@@ -6,9 +6,9 @@
 ![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-**End-to-end machine learning project** for credit score classification using tree-based models with hyperparameter tuning, class imbalance handling, and comprehensive evaluation metrics.
+**End-to-end classifier prototype** for credit score classification using tree-based models with hyperparameter tuning, class imbalance handling, and comprehensive evaluation metrics.
 
-**Business Goal:** Build a production-ready classifier to predict customer creditworthiness (`Poor`, `Standard`, `Good`) for risk assessment in lending decisions (loans, credit cards, BNPL).
+**Business Goal:** Build an end-to-end classifier prototype to predict customer creditworthiness (`Poor`, `Standard`, `Good`) for risk assessment in lending decisions (loans, credit cards, BNPL).
 
 ---
 
@@ -28,11 +28,11 @@
 
 ## 1. Problem Statement
 
-Financial institutions need to decide whether to **approve or reject** credit applications while minimizing:
+Financial institutions need to decide whether to **approve or reject** credit applications while balancing:
 
 - **Default Risk:** Probability of non-payment by borrowers
 - **Opportunity Cost:** Lost revenue from rejecting good applicants
-- **Regulatory Compliance:** Fair lending practices and explainability requirements
+- **Explainability and Fairness:** Supports analyst review and further assessment
 
 This project builds a **multi-class classification model** to predict credit scores (`Poor`, `Standard`, `Good`) using customer demographics, financial behavior, and credit history.
 
@@ -40,7 +40,7 @@ This project builds a **multi-class classification model** to predict credit sco
 
 ✅ **Maximize approval rate** for creditworthy customers  
 ✅ **Minimize false approvals** of high-risk applicants (Poor → Standard/Good misclassifications)  
-✅ **Provide interpretable models** for regulatory compliance and analyst review  
+✅ **Provide interpretable models** for explainability-oriented analyst review and further assessment
 ✅ **Handle class imbalance** effectively (imbalanced credit score distribution)
 
 ---
@@ -196,7 +196,7 @@ Three classification algorithms were evaluated:
 ✅ **Risk Mitigation:** 79% recall on `Poor` class captures most high-risk applicants  
 ⚠️ **False Approvals:** ~21% of `Poor` customers slip through → Recommend manual review threshold  
 ✅ **Bootstrap Stability:** Model maintains ~72% accuracy under heavy resampling  
-📊 **Deployment Ready:** Suitable for A/B testing in production credit decisioning system
+📊 Provides a documented basis for further validation, threshold analysis, and controlled experimentation.
 
 ---
 
@@ -221,7 +221,7 @@ Three classification algorithms were evaluated:
 - **Class Imbalance Management:** Stratified splits, class weight calculation, cost-sensitive evaluation
 - **Hyperparameter Tuning:** Grid Search CV, bootstrap validation for robustness assessment
 - **Model Evaluation:** Multi-class precision/recall/F1, AUC-ROC, confusion matrices, threshold analysis
-- **Business Interpretation:** False positive/negative trade-offs, cost-benefit analysis, deployment recommendations
+- **Business Interpretation:** False positive/negative trade-offs, cost-benefit analysis, analytical recommendations
 - **ML Pipeline Development:** Reproducible, modular code with clear separation of EDA and modeling
 
 ---
@@ -274,7 +274,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Ramiro Ottone Villar**  
 [![GitHub](https://img.shields.io/badge/GitHub-rAmIro--89-181717?style=flat&logo=github)](https://github.com/rAmIro-89)  
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/your-profile)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/ramiro-ottone-villar)
 
 ---
 
